@@ -15,9 +15,7 @@ const getBuffer = bent('buffer')
 const server = require('../')
 
 // sample response
-const sampleMinimumReleases = require('./fixtures/minimumReleases.json')
-const sampleLatestReleases = require('./fixtures/latestReleases.json')
-
+const sampleApiResponse = require('./fixtures/apiResponse.json')
 
 const context = {}
 
@@ -39,13 +37,13 @@ tape('should get dependencies', async function (t) {
 })
 
 tape('should get minimum secure versions', async function (t) {
-    nock(`http://localhost:${context.origin}`, {
-		reqheaders: {
-			accept: 'application/json'
-		}
-	})
-		.get('/minimum-secure')
-        .reply(200, sampleMinimumReleases)
+    nock('https://nodejs.org', {
+        reqheaders: {
+            accept: 'application/json'
+        }
+    })
+        .get('/dist/index.json')
+        .reply(200, sampleApiResponse)
         
     const minSecureReleases = await getJSON(`${context.origin}/minimum-secure`)
 
@@ -54,14 +52,14 @@ tape('should get minimum secure versions', async function (t) {
 })
 
 tape('should get latest-releases', async function (t) {
-    nock(`http://localhost:${context.origin}`, {
-		reqheaders: {
-			accept: 'application/json'
-		}
-	})
-		.get('/latest-releases')
-        .reply(200, sampleLatestReleases)
-
+    nock('https://nodejs.org', {
+        reqheaders: {
+            accept: 'application/json'
+        }
+    })
+        .get('/dist/index.json')
+        .reply(200, sampleApiResponse)
+        
     const latestReleases = await getJSON(`${context.origin}/latest-releases`)
 
     t.ok(latestReleases.v14.version === 'v14.10.1', 'v14 version should match')
