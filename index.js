@@ -1,6 +1,7 @@
 
 // config
 const PORT = 3000
+const API_ENDPOINT = 'https://nodejs.org/dist/index.json'
 
 // std lib
 const fs = require('fs')
@@ -43,14 +44,14 @@ app.get('/dependencies', (req, res) => {
 })
 
 app.get('/minimum-secure', async (req, res) => {
-    const versions = await getJSON('https://nodejs.org/dist/index.json')
+    const versions = await getJSON(API_ENDPOINT)
     const secureVersions = versions.filter(version => version && version.security === true)
     const minimumSecure = extractLatestVersion(secureVersions)
     return res.json(minimumSecure)
 })
 
 app.get('/latest-releases', async (req, res) => {
-    const versions = await getJSON('https://nodejs.org/dist/index.json')
+    const versions = await getJSON(API_ENDPOINT)
     const latestReleases = extractLatestVersion(versions)
     return res.json(latestReleases)
 })
